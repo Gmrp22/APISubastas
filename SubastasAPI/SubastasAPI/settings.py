@@ -37,11 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.Oferta',
-    'apps.Producto',
-    'apps.Subasta',
-    'apps.Usuario',
-    'apps.Venta',
     'rest_framework',
 
 ]
@@ -81,7 +76,6 @@ WSGI_APPLICATION = 'SubastasAPI.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME':  'subasta',
@@ -92,7 +86,7 @@ DATABASES = {
 
     }
 }
-}
+
 
 
 # Password validation
