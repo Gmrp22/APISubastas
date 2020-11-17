@@ -36,7 +36,7 @@ class ProductoPut(RetrieveUpdateAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnly]
 
     def perform_update(self,serializer):
         """Metodo para relacionar solo con usuario creador"""
@@ -48,3 +48,4 @@ class ProductoDelete(RetrieveDestroyAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnly]

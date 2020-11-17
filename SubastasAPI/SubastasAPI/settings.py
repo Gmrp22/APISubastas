@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'apps.Venta',
 
 ]
+# AUTH_USER_MODEL = "apps.Uduar" 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
