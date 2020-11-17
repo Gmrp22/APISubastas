@@ -27,9 +27,7 @@ class ProductoPost(CreateAPIView):
     serializer_class = ProductoSerializer
     permission_classes = [IsAuthenticated,IsAdminUser]
 
-    def perform_create(self,serializer):
-        """Metodo para relacionar solo con usuario creador"""
-        serializer.save(user= self.request.user)
+    
 
 class ProductoPut(RetrieveUpdateAPIView):
     """ Actualizar producto"""

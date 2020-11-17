@@ -5,7 +5,13 @@ from rest_framework.views import APIView
 from .models import Subasta
 from .serializers import SubastaSerializer
 from rest_framework import status
-# Create your views here.
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated,
+    IsAdminUser,
+    IsAuthenticatedOrReadOnly,
+)
+from apps.Producto.permissions import IsOwnerOrReadOnly
 
 
 class ListaSubastas(ListAPIView):
@@ -13,11 +19,11 @@ class ListaSubastas(ListAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
 
-
 class SubastaPost(CreateAPIView):
     """ Crea una subasta """
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class SubastaPut(RetrieveUpdateAPIView):
@@ -25,6 +31,7 @@ class SubastaPut(RetrieveUpdateAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
 
 
 class SubastaDelete(RetrieveDestroyAPIView):
@@ -32,3 +39,4 @@ class SubastaDelete(RetrieveDestroyAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
