@@ -2,13 +2,15 @@ from django.db import models
 from apps.Subasta.models import Subasta
 from apps.Oferta.models import Oferta
 from apps.Producto.models import Producto
+from django.contrib.auth.models import User
 # Create your models here.
 class Venta(models.Model):
     """ Modelo de venta"""
-    Fecha = models.DateField()
-    # Vendedor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    # Total = models.OneToOneField(Oferta, on_delete=models.CASCADE)
-    # Subasta = models.OneToOneField(Subasta, on_delete=models.CASCADE)
-    # Producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
+    Vendedor = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=True)
+    Total = models.OneToOneField(Oferta, on_delete=models.CASCADE, blank=True,   null=True)
+    Subasta = models.OneToOneField(Subasta, on_delete=models.CASCADE, blank=False, null=True)
+    #Producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
 
 
+    def __str__(self):
+        return '{}'.format(self.id)
