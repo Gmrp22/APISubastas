@@ -3,4 +3,4 @@ from .models import Oferta
 class OfertaSerializer(ModelSerializer):
     class Meta:
         model = Oferta
-        fields = ['Precio', 'Subasta']
+        fields = ['id','Precio', 'Subasta', 'Usuario_oferta']

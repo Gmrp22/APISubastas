@@ -11,8 +11,8 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
-from apps.Producto.permissions import IsOwnerOrReadOnly
-
+from .permissions import IsOwnerOrReadOnly
+from rest_framework import status
 
 class ListaSubastas(ListAPIView):
     """ Lista todas las subastas """
@@ -30,7 +30,7 @@ class SubastaPut(RetrieveUpdateAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
 
 class SubastaDelete(RetrieveDestroyAPIView):
@@ -38,4 +38,4 @@ class SubastaDelete(RetrieveDestroyAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
