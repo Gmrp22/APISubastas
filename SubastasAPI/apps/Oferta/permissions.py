@@ -11,3 +11,14 @@ class IsOwnerOrReadOnly(BasePermission):
             return True
         return False
 
+class SubastaTerminada(BasePermission):
+    """
+    Permiso para que solo a subastas en espera pueda agregarse
+    """
+    message= 'Esta subasta ha terminado'
+    metodos=['PUT', 'CREATE']
+    def has_object_permission(self, request, view, obj):
+        if request.method in self.metodos and  obj.Subasta.Estado == 'Espera':
+            return True
+        return False
+

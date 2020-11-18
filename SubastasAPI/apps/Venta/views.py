@@ -4,6 +4,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveDestroyA
 from rest_framework.views import APIView
 from apps.Subasta.models import Subasta
 from .models import Venta
+from apps.Oferta.models import Oferta
 from .serializers import VentaSerializer, VentaSerializerCreate, VentaSerializerUpdate
 from rest_framework import status
 from rest_framework.permissions import (
@@ -12,6 +13,7 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
+from django.db.models import Avg
 from .permissions import IsOwnerOrReadOnly,IsOwnerOrReadOnlyCreate
 from rest_framework import status
 
@@ -19,7 +21,7 @@ class ListaVentas(ListAPIView):
     """ Lista todas las subastas """
     queryset = Venta.objects.all()
     serializer_class = VentaSerializer
-
+    
 class VentaPost(CreateAPIView):
     """ Crea una subasta """
     queryset = Venta.objects.all()
@@ -36,7 +38,6 @@ class VentaPost(CreateAPIView):
             return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
 
-
 class VentaPut(RetrieveUpdateAPIView):
     """ Actualizar subasta"""
     queryset = Venta.objects.all()
@@ -44,10 +45,16 @@ class VentaPut(RetrieveUpdateAPIView):
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
+
+    """
+    Metodo para verificar si se termino la venta
+    Si se termino actualiza estado de subasta, el estado de producto y calcula el promedio
+    """
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.Total != None:
             subasta = serializer.data['Subasta']
+            promedio = subasta
             subasta = Subasta.objects.get(pk=subasta)
             subasta.Estado = 'Terminado'
             subasta.Precio= serializer.data['Total']
@@ -55,4 +62,7 @@ class VentaPut(RetrieveUpdateAPIView):
             producto = Subasta.objects.get(Nombre_Producto= subasta.Nombre_Producto)
             producto.Estado = 'Vendido'
             producto.save()
-            
+            promedio = Oferta.objects.filter(Subasta = promedio)
+            promedio = promedio.aggregate(Avg('Precio'))
+            serializer.data['Promedio'] = promedio
+            serializer.save()

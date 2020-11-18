@@ -13,4 +13,4 @@ class VentaSerializerCreate(ModelSerializer):
 class VentaSerializerUpdate(ModelSerializer):
     class Meta:
         model = Venta
-        fields = ['Total', 'Subasta']
+        fields = ['Total', 'Subasta', 'Promedio']
