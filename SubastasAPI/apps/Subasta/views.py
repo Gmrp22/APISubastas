@@ -25,7 +25,15 @@ class SubastaPost(CreateAPIView):
     """ Crea una subasta """
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializerCreate
-    permission_classes = [IsAuthenticated, IsAdminUser]#--- no dejar que quien es el dueño cree y no crear para ya vendidos
+    permission_classes = [IsAuthenticated, IsAdminUser]
+    
+    def perform_create(self, serializer):
+        """Verifica que el dueño del producto sea quien esta creando la subasta"""
+        producto= serializer.validated_data['Nombre_Producto']
+        dueño = producto.Vendedor
+        if dueño == self.request.user:
+            serializer.save()
+
 
 class SubastaPut(RetrieveUpdateAPIView):
     """ Actualizar subasta"""

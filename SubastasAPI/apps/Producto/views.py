@@ -12,7 +12,6 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
-# Create your views here.
 
 
 class ListaProductos(ListAPIView):
@@ -25,20 +24,18 @@ class ProductoPost(CreateAPIView):
     """ Crea un producto """
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializerCreate
-    permission_classes = [IsAuthenticated,IsAdminUser]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
-    
+    def perform_create(self, serializer):
+        serializer.save(Vendedor=self.request.user)
+
 
 class ProductoPut(RetrieveUpdateAPIView):
     """ Actualizar producto"""
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializerUpdate
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnly]
-
-    def perform_update(self,serializer):
-        """Metodo para relacionar solo con usuario creador"""
-        serializer.save(user= self.request.user)
+    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
 
 class ProductoDelete(RetrieveDestroyAPIView):
@@ -46,4 +43,4 @@ class ProductoDelete(RetrieveDestroyAPIView):
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]

@@ -14,6 +14,7 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 
+
 class ListaOfertas(ListAPIView):
     """ Lista todas las subastas """
     queryset = Oferta.objects.all()
@@ -26,7 +27,12 @@ class OfertaPost(CreateAPIView):
     serializer_class = OfertaSerializer
     permission_classes = [IsAuthenticated, SubastaTerminada]
 
-#---un perform create que verifique estaado de subasta ----
+    def perform_create(self, serializer):
+        """Verificar que la subasta este activa y guarda el usuario que realizo la oferta"""
+        subasta = serializer.validated_data['Subasta']
+        if subasta.Estado == 'Espera':
+            serializer.save(Usuario_oferta=self.request.user)
+
 
 class OfertaPut(RetrieveUpdateAPIView):
     """ Actualizar subasta"""
@@ -34,6 +40,7 @@ class OfertaPut(RetrieveUpdateAPIView):
     serializer_class = OfertaSerializer
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, SubastaTerminada]
+
 
 class OfertaDelete(RetrieveDestroyAPIView):
     """ Eliminar una subasta """
