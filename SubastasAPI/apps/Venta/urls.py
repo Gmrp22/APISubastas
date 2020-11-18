@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.urls import path
 from .views import *
 urlpatterns = [
-    #path('Ventas/', .as_view()),
-
-
+    #path('Subastas/', .as_view()),
+    path('Ventas/', ListaVentas.as_view()),
+    path('Ventas/POST/', VentaPost.as_view()),
+    path('Ventas/PUT/<int:pk>/', VentaPut.as_view()),
+    
 ]

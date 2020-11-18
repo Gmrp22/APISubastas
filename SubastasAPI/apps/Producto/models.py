@@ -8,7 +8,7 @@ class Producto(models.Model):
     Nombre = models.CharField(max_length=200)
     Codigo = models.CharField(max_length=200, default="")
     Estado = models.CharField(max_length=200, default='Espera', blank=True)
-    Vendedor = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+    Vendedor = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=False)
 
     def __str__(self):
-        return '{}'.format(self.Codigo)
+        return '{}'.format(self.id)

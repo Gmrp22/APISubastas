@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveDestroyAPIView, RetrieveUpdateAPIView
 from rest_framework.views import APIView
 from .models import Producto
-from .serializers import ProductoSerializer
+from .serializers import ProductoSerializer, ProductoSerializerUpdate, ProductoSerializerCreate
 from rest_framework import status
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.permissions import (
@@ -24,17 +24,15 @@ class ListaProductos(ListAPIView):
 class ProductoPost(CreateAPIView):
     """ Crea un producto """
     queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
+    serializer_class = ProductoSerializerCreate
     permission_classes = [IsAuthenticated,IsAdminUser]
 
-    def perform_create(self,serializer):
-        """Metodo para relacionar solo con usuario creador"""
-        serializer.save(user= self.request.user)
+    
 
 class ProductoPut(RetrieveUpdateAPIView):
     """ Actualizar producto"""
     queryset = Producto.objects.all()
-    serializer_class = ProductoSerializer
+    serializer_class = ProductoSerializerUpdate
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnly]
 

@@ -4,3 +4,8 @@ class SubastaSerializer(ModelSerializer):
     class Meta:
         model = Subasta
         fields = ['id','Nombre_Producto', 'Estado','Precio_Final']
+
+class SubastaSerializerCreate(ModelSerializer):
+    class Meta:
+        model = Subasta
+        fields = ['id','Nombre_Producto']
