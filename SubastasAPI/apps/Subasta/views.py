@@ -23,15 +23,14 @@ class SubastaPost(CreateAPIView):
     """ Crea una subasta """
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
-    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
-
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 class SubastaPut(RetrieveUpdateAPIView):
     """ Actualizar subasta"""
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
 class SubastaDelete(RetrieveDestroyAPIView):
@@ -39,4 +38,4 @@ class SubastaDelete(RetrieveDestroyAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]
