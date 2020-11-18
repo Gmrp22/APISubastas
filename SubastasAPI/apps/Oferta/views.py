@@ -26,7 +26,7 @@ class OfertaPost(CreateAPIView):
     serializer_class = OfertaSerializer
     permission_classes = [IsAuthenticated, SubastaTerminada]
 
-#---un perform create que verifique estaado de subasta 
+#---un perform create que verifique estaado de subasta ----
 
 class OfertaPut(RetrieveUpdateAPIView):
     """ Actualizar subasta"""

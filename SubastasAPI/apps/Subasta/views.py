@@ -19,6 +19,8 @@ class ListaSubastas(ListAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
     permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
+
+    
 class SubastaPost(CreateAPIView):
     """ Crea una subasta """
     queryset = Subasta.objects.all()
