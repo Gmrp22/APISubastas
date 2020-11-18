@@ -5,7 +5,7 @@ class IsOwnerOrReadOnly(BasePermission):
     Permitir que solo los dueños de la subasta puedan modificar
     """
     message= 'No tiene permisos para editar esta venta'
-    metodos=['PUT', 'DELETE']
+    metodos=['PUT', 'DELETE', 'GET']
     def has_object_permission(self, request, view, obj):
         if request.method in self.metodos and  obj.Subasta.Nombre_Producto.Vendedor == request.user:
             return True        

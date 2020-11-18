@@ -22,7 +22,7 @@ class ListaVentas(ListAPIView):
     """ Lista todas las subastas """
     queryset = Venta.objects.all()
     serializer_class = VentaSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnlyCreate]
+    permission_classes = [IsAuthenticated, IsAdminUser] #---
 
 
 class VentaPost(CreateAPIView):

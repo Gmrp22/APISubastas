@@ -3,7 +3,7 @@ from .models import Venta
 class VentaSerializer(ModelSerializer):
     class Meta:
         model = Venta
-        fields = ['id','Vendedor','Total', 'Subasta']
+        fields = ['id','Vendedor','Total', 'Subasta', 'Promedio']
 
 class VentaSerializerCreate(ModelSerializer):
     class Meta:
