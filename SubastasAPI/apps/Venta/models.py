@@ -6,7 +6,9 @@ from apps.Producto.models import Producto
 class Venta(models.Model):
     """ Modelo de venta"""
     Fecha = models.DateField()
-    #Vendedor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    #Total = models.OneToOneField(Oferta, on_delete=models.CASCADE)
-    #Subasta = models.OneToOneField(Subasta, on_delete=models.CASCADE)
-    #Producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
+    # Vendedor = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    # Total = models.OneToOneField(Oferta, on_delete=models.CASCADE)
+    # Subasta = models.OneToOneField(Subasta, on_delete=models.CASCADE)
+    # Producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
+
+

@@ -4,3 +4,13 @@ class ProductoSerializer(ModelSerializer):
     class Meta:
         model = Producto
         fields = ['id','Nombre','Codigo','Estado', 'Vendedor']
+
+class ProductoSerializerUpdate(ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['id','Nombre','Codigo']
+
+class ProductoSerializerCreate(ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['id','Nombre','Codigo', 'Vendedor']
