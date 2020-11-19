@@ -15,30 +15,47 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
 )
 from django.db.models import Avg
-from .permissions import IsOwnerOrReadOnly,IsOwnerOrReadOnlyCreate
+from .permissions import IsOwnerOrReadOnly, IsOwnerOrReadOnlyCreate
 from rest_framework import status
+
 
 class ListaVentas(ListAPIView):
     """ Lista todas las subastas """
     queryset = Venta.objects.all()
     serializer_class = VentaSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser] #---
+    permission_classes = [IsAuthenticated, IsAdminUser]  # ---
 
 
-class VentaPost(CreateAPIView):
-    """ Crea una subasta """
-    queryset = Venta.objects.all()
-    serializer_class = VentaSerializerCreate
-    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnlyCreate]
+# class VentaPost(CreateAPIView):
+#     """ Crea una subasta """
+#     queryset = Venta.objects.all()
+#     serializer_class = VentaSerializerCreate
+#     permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
 
 
-    # def perform_create(self, serializer):
-    #     vendedor = serializer.data['Vendedor']
-    #     if vendedor == self.request.user:
-    #         serializer.save()
-    #     else:
-    #         data = {'message': 'Creacion cancelada, no es el dueño del producto'}
-    #         return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+#     def perform_create(self, serializer):
+#         """Verifica que la venta la realice el dueño del producto"""
+#         subasta = serializer.validated_data['Subasta']
+#         dueño = subasta.Nombre_Producto.Vendedor
+#         if dueño == self.request.user:
+#             serializer.save(Vendedor=self.request.user)
+class VentaPost(APIView):
+    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
+
+    def post(self, request, format=None):
+        serializer = VentaSerializerCreate(data=request.data)
+        if serializer.is_valid():
+            subasta = serializer.validated_data['Subasta']
+            dueño = subasta.Nombre_Producto.Vendedor
+            if dueño == self.request.user:
+                serializer.save(Vendedor=self.request.user)           
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                contexto = {'Error':'Usted no puede crear esta venta'}
+                return Response(contexto, status=status.HTTP_403_FORBIDDEN)
+        return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
 
 
 class VentaPut(RetrieveUpdateAPIView):
@@ -48,11 +65,11 @@ class VentaPut(RetrieveUpdateAPIView):
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
-
     """
     Metodo para verificar si se termino la venta
     Si se termino actualiza estado de subasta, el estado de producto y calcula el promedio
     """
+
     def perform_update(self, serializer):
         instance = serializer.save()
         if instance.Total != None:
@@ -60,13 +77,13 @@ class VentaPut(RetrieveUpdateAPIView):
             promedio = subasta
             subasta = Subasta.objects.get(pk=subasta)
             subasta.Estado = 'Terminado'
-            subasta.Precio= serializer.data['Total']
+            subasta.Precio_Final = serializer.data['Total']
             subasta.save()
             producto = subasta.Nombre_Producto
-            producto = Producto.objects.get(id= producto.id)
+            producto = Producto.objects.get(id=producto.id)
             producto.Estado = 'Vendido'
             producto.save()
-            promedio = Oferta.objects.filter(Subasta = promedio)
+            promedio = Oferta.objects.filter(Subasta=promedio)
             promedio = promedio.aggregate(Avg('Precio'))
             promedio = promedio['Precio__avg']
             serializer.validated_data['Promedio'] = promedio

@@ -8,7 +8,7 @@ class VentaSerializer(ModelSerializer):
 class VentaSerializerCreate(ModelSerializer):
     class Meta:
         model = Venta
-        fields = ['Vendedor','Subasta']
+        fields = ['Subasta']
 
 class VentaSerializerUpdate(ModelSerializer):
     class Meta:

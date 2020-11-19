@@ -11,8 +11,9 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, SubastaTerminada
 from rest_framework import status
+
 
 class ListaSubastas(ListAPIView):
     """ Lista todas las subastas """
@@ -20,19 +21,35 @@ class ListaSubastas(ListAPIView):
     serializer_class = SubastaSerializer
     permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
-    
-class SubastaPost(CreateAPIView):
+
+class SubastaPost(APIView):
     """ Crea una subasta """
-    queryset = Subasta.objects.all()
-    serializer_class = SubastaSerializerCreate
-    permission_classes = [IsAuthenticated, IsAdminUser]#--- no dejar que quien es el dueño cree y no crear para ya vendidos
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    """ 
+    Crea la subasta, si no se cumple con los permisos y si no es el dueño del producto no lo permitira 
+    """
+
+    def post(self, request, format=None):
+        serializer = SubastaSerializerCreate(data=request.data)
+        if serializer.is_valid():
+            producto = serializer.validated_data['Nombre_Producto']
+            dueño = producto.Vendedor
+            if dueño == self.request.user:
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                contexto = {'Error': 'Usted no es el dueño de este producto'}
+                return Response(contexto, status=status.HTTP_403_FORBIDDEN)
+        return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
 
 class SubastaPut(RetrieveUpdateAPIView):
     """ Actualizar subasta"""
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializerCreate
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminUser,IsOwnerOrReadOnly, SubastaTerminada]
 
 
 class SubastaDelete(RetrieveDestroyAPIView):

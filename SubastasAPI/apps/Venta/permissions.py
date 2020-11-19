@@ -18,7 +18,7 @@ class IsOwnerOrReadOnlyCreate(BasePermission):
     message= 'No tiene permisos para editar esta venta'
     metodos=['CREATE']
     def has_object_permission(self, request, view, obj):
-        print(obj.Vendedor)
+        print(obj.Vendedor) 
         print("*//")
         print(request.user)
         if request.method in self.metodos and  obj.Vendedor == request.user:
