@@ -10,4 +10,6 @@ urlpatterns = [
     
 ]
 
-""" Para terminar la venta se hace uso de Ventas/PUT/<int:pk> y se ingresa el total a seleccionar"""
+""" Para terminar la venta se hace uso de Ventas/PUT/<int:pk> y se ingresa el total a seleccionar
+Este total es una de las ofertas que propuso el cliente
+"""

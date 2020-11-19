@@ -23,7 +23,6 @@ class ListaOfertas(ListAPIView):
 
 class OfertaPost(APIView):
     """ Creacion de ofertas a subastas"""
-    permission_classes = [IsAuthenticated, SubastaTerminada]
     """ Si la subasta esta terminada no se puede crear otra oferta"""
     def post(self, request, format=None):
         serializer = OfertaSerializer(data=request.data)
