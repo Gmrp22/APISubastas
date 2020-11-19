@@ -26,19 +26,36 @@ class ListaVentas(ListAPIView):
     permission_classes = [IsAuthenticated, IsAdminUser]  # ---
 
 
-class VentaPost(CreateAPIView):
-    """ Crea una subasta """
-    queryset = Venta.objects.all()
-    serializer_class = VentaSerializerCreate
+# class VentaPost(CreateAPIView):
+#     """ Crea una subasta """
+#     queryset = Venta.objects.all()
+#     serializer_class = VentaSerializerCreate
+#     permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
+
+
+#     def perform_create(self, serializer):
+#         """Verifica que la venta la realice el dueño del producto"""
+#         subasta = serializer.validated_data['Subasta']
+#         dueño = subasta.Nombre_Producto.Vendedor
+#         if dueño == self.request.user:
+#             serializer.save(Vendedor=self.request.user)
+class VentaPost(APIView):
     permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
 
+    def post(self, request, format=None):
+        serializer = VentaSerializerCreate(data=request.data)
+        if serializer.is_valid():
+            subasta = serializer.validated_data['Subasta']
+            dueño = subasta.Nombre_Producto.Vendedor
+            if dueño == self.request.user:
+                serializer.save(Vendedor=self.request.user)           
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                contexto = {'Error':'Usted no puede crear esta venta'}
+                return Response(contexto, status=status.HTTP_403_FORBIDDEN)
+        return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
 
-    def perform_create(self, serializer):
-        """Verifica que la venta la realice el dueño del producto"""
-        subasta = serializer.validated_data['Subasta']
-        dueño = subasta.Nombre_Producto.Vendedor
-        if dueño == self.request.user:
-            serializer.save(Vendedor=self.request.user)
 
 
 class VentaPut(RetrieveUpdateAPIView):

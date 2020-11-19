@@ -11,7 +11,7 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticatedOrReadOnly,
 )
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, SubastaTerminada
 from rest_framework import status
 
 class ListaSubastas(ListAPIView):
@@ -21,18 +21,36 @@ class ListaSubastas(ListAPIView):
     permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
     
-class SubastaPost(CreateAPIView):
-    """ Crea una subasta """
-    queryset = Subasta.objects.all()
-    serializer_class = SubastaSerializerCreate
-    permission_classes = [IsAuthenticated, IsAdminUser]
+# class SubastaPost(CreateAPIView):
+#     """ Crea una subasta """
+#     queryset = Subasta.objects.all()
+#     serializer_class = SubastaSerializerCreate
+#     permission_classes = [IsAuthenticated, IsAdminUser]
     
-    def perform_create(self, serializer):
-        """Verifica que el dueño del producto sea quien esta creando la subasta"""
-        producto= serializer.validated_data['Nombre_Producto']
-        dueño = producto.Vendedor
-        if dueño == self.request.user:
-            serializer.save()
+#     def perform_create(self, serializer):
+#         """Verifica que el dueño del producto sea quien esta creando la subasta"""
+#         producto= serializer.validated_data['Nombre_Producto']
+#         dueño = producto.Vendedor
+#         if dueño == self.request.user:
+#             serializer.save()
+
+class SubastaPost(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def post(self, request, format=None):
+        serializer = SubastaSerializerCreate(data=request.data)
+        if serializer.is_valid():
+            producto= serializer.validated_data['Nombre_Producto']
+            dueño = producto.Vendedor
+            if dueño == self.request.user:
+                serializer.save()           
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                contexto = {'Error':'Usted no es el dueño de este producto'}
+                return Response(contexto, status=status.HTTP_403_FORBIDDEN)
+        return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
+
 
 
 class SubastaPut(RetrieveUpdateAPIView):
@@ -40,7 +58,7 @@ class SubastaPut(RetrieveUpdateAPIView):
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializerCreate
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly, SubastaTerminada]
 
 
 class SubastaDelete(RetrieveDestroyAPIView):
