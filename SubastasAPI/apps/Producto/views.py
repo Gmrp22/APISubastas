@@ -21,7 +21,11 @@ class ListaProductos(ListAPIView):
 
 
 class ProductoPost(CreateAPIView):
-    """ Crea un producto """
+    """ 
+    *Crea un producto
+    *Recibe solo Nombre y Codigo
+    *El estado por default es "Espera"
+    """
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializerCreate
     permission_classes = [IsAuthenticated, IsAdminUser]
@@ -32,7 +36,9 @@ class ProductoPost(CreateAPIView):
 
 
 class ProductoPut(RetrieveUpdateAPIView):
-    """ Actualizar producto"""
+    """ Actualizar producto
+    *Recibe solo Nombre y Codigo
+    """
     queryset = Producto.objects.all()
     serializer_class = ProductoSerializerUpdate
     lookup_field = 'pk'

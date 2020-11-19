@@ -28,11 +28,13 @@ class ListaVentas(ListAPIView):
 
 class VentaPost(APIView):
     """ Crea ventas """
-    permission_classes = [IsAuthenticated,
-        IsAdminUser, IsOwnerOrReadOnlyCreate]
+    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
 
     def post(self, request, format=None):
-        """ Crea solamente si el que esta haciendo la peticion es el dueño del producto"""
+        """ 
+        *Crea solamente si el que esta haciendo la peticion es el dueño del producto
+        *Recibe solo la subasta a la que estara vinculada
+        """
         serializer = VentaSerializerCreate(data=request.data)
         if serializer.is_valid():
             subasta = serializer.validated_data['Subasta']
@@ -48,7 +50,14 @@ class VentaPost(APIView):
 
 
 class VentaPut(RetrieveUpdateAPIView):
-    """ Actualizar subasta"""
+    """ 
+    *Actualizar subasta
+
+    *Recibe Total, Subasta
+
+    *Si se quiere terminar la venta se debe de seleccionarse el Total,
+    que es la oferta de uno de los usuarios
+    """
     queryset = Venta.objects.all()
     serializer_class = VentaSerializerUpdate
     lookup_field = 'pk'
@@ -56,8 +65,8 @@ class VentaPut(RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         """
-        Metodo para verificar si se termino la venta
-        Si se termino actualiza estado de subasta, el estado de producto y calcula el promedio
+        *Metodo para verificar si se termino la venta
+        *Si se termino actualiza estado de subasta, el estado de producto y calcula el promedio
         """
         instance = serializer.save()
         if instance.Total != None:

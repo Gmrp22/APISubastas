@@ -22,8 +22,11 @@ class ListaOfertas(ListAPIView):
 
 
 class OfertaPost(APIView):
-    """ Creacion de ofertas a subastas"""
-    """ Si la subasta esta terminada no se puede crear otra oferta"""
+    """ 
+    *Creacion de ofertas a subastas
+    *Si el esstado de subasta es 'Terminado' no se puede crear otra oferta
+    *Recibe Precio y Subasta
+    """
     def post(self, request, format=None):
         serializer = OfertaSerializer(data=request.data)
         if serializer.is_valid():

@@ -27,8 +27,12 @@ class SubastaPost(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     """ 
-    Crea la subasta, si no se cumple con los permisos y si no es el dueño del 
-    producto no lo permitira 
+    *Crea la subasta
+    *Si no se cumple con los permisos y si el usuario no  es el dueño del 
+    producto no lo permitira
+    
+    *Recibe Nombre_Producto, que es el id del producto a poner en subasta 
+    *Su estado default es 'Espera'
     """
 
     def post(self, request, format=None):

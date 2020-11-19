@@ -13,12 +13,18 @@ class UserList(ListAPIView):
 
 
 class UserDetail(RetrieveAPIView):
-    """ Muestra un usuario especifico"""
+    """ 
+    *Muestra un usuario especifico
+    *Recibe el id 
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 class SignUp(CreateAPIView):
-    """ Crea un usuario"""
+    """ 
+    *Crea un usuario
+    *Recibe el username, password e is_staff
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializerSignUp
 
