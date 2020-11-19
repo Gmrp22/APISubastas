@@ -5,7 +5,7 @@ from apps.Producto.models import Producto
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username','is_staff']
+        fields = ['id', 'username','is_staff', 'email']
 
 
 class UserSerializerLogIn(ModelSerializer):
@@ -17,4 +17,4 @@ class UserSerializerLogIn(ModelSerializer):
 class UserSerializerSignUp(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username','password','is_staff']
+        fields = ['id', 'username','email','password','is_staff']
