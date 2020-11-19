@@ -19,7 +19,7 @@ class ListaSubastas(ListAPIView):
     """ Lista todas las subastas """
     queryset = Subasta.objects.all()
     serializer_class = SubastaSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 class SubastaPost(APIView):

@@ -13,6 +13,7 @@ class UserList(ListAPIView):
 
 
 class UserDetail(RetrieveAPIView):
+    """ Muestra un usuario especifico"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
