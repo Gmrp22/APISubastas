@@ -23,39 +23,28 @@ class ListaVentas(ListAPIView):
     """ Lista todas las subastas """
     queryset = Venta.objects.all()
     serializer_class = VentaSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]  # ---
+    permission_classes = [IsAuthenticated, IsAdminUser]
 
 
-# class VentaPost(CreateAPIView):
-#     """ Crea una subasta """
-#     queryset = Venta.objects.all()
-#     serializer_class = VentaSerializerCreate
-#     permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
-
-
-#     def perform_create(self, serializer):
-#         """Verifica que la venta la realice el dueño del producto"""
-#         subasta = serializer.validated_data['Subasta']
-#         dueño = subasta.Nombre_Producto.Vendedor
-#         if dueño == self.request.user:
-#             serializer.save(Vendedor=self.request.user)
 class VentaPost(APIView):
-    permission_classes = [IsAuthenticated,IsAdminUser, IsOwnerOrReadOnlyCreate]
+    """ Crea ventas """
+    permission_classes = [IsAuthenticated,
+        IsAdminUser, IsOwnerOrReadOnlyCreate]
 
     def post(self, request, format=None):
+        """ Crea solamente si el que esta haciendo la peticion es el dueño del producto"""
         serializer = VentaSerializerCreate(data=request.data)
         if serializer.is_valid():
             subasta = serializer.validated_data['Subasta']
             dueño = subasta.Nombre_Producto.Vendedor
             if dueño == self.request.user:
-                serializer.save(Vendedor=self.request.user)           
+                serializer.save(Vendedor=self.request.user)
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
-                contexto = {'Error':'Usted no puede crear esta venta'}
+                contexto = {'Error': 'Usted no puede crear esta venta'}
                 return Response(contexto, status=status.HTTP_403_FORBIDDEN)
         return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
-
 
 
 class VentaPut(RetrieveUpdateAPIView):
@@ -65,12 +54,11 @@ class VentaPut(RetrieveUpdateAPIView):
     lookup_field = 'pk'
     permission_classes = [IsAuthenticated, IsAdminUser, IsOwnerOrReadOnly]
 
-    """
-    Metodo para verificar si se termino la venta
-    Si se termino actualiza estado de subasta, el estado de producto y calcula el promedio
-    """
-
     def perform_update(self, serializer):
+        """
+        Metodo para verificar si se termino la venta
+        Si se termino actualiza estado de subasta, el estado de producto y calcula el promedio
+        """
         instance = serializer.save()
         if instance.Total != None:
             subasta = serializer.data['Subasta']

@@ -27,6 +27,7 @@ class ProductoPost(CreateAPIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def perform_create(self, serializer):
+        """ Indica que el usuario que lo creo es el vendedor"""
         serializer.save(Vendedor=self.request.user)
 
 

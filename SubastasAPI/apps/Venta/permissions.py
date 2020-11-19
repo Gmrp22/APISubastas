@@ -2,7 +2,7 @@ from rest_framework.permissions import BasePermission
 
 class IsOwnerOrReadOnly(BasePermission):
     """
-    Permitir que solo los dueños de la subasta puedan modificar
+    Permitir que solo los dueños de la venta puedan modificar
     """
     message= 'No tiene permisos para editar esta venta'
     metodos=['PUT', 'DELETE', 'GET']
@@ -13,7 +13,7 @@ class IsOwnerOrReadOnly(BasePermission):
     
 class IsOwnerOrReadOnlyCreate(BasePermission):
     """
-    Permitir que solo los dueños del producto puedan crear subasta
+    Permitir que solo los dueños del producto puedan crear ventaa
     """
     message= 'No tiene permisos para editar esta venta'
     metodos=['CREATE']

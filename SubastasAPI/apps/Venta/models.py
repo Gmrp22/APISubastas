@@ -9,7 +9,6 @@ class Venta(models.Model):
     Vendedor = models.ForeignKey(User, on_delete=models.CASCADE, blank=False, null=True)
     Total = models.OneToOneField(Oferta, on_delete=models.CASCADE, blank=True,   null=True)
     Subasta = models.OneToOneField(Subasta, on_delete=models.CASCADE, blank=False, null=True)
-    #Producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
     Promedio = models.FloatField(blank=True, default=0)
 
     def __str__(self):
